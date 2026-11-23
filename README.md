@@ -42,9 +42,11 @@ START → classify ──(ביטחון ≥ 0.8)───────────
 
 ## תובנה מה-traces
 
-ב-traces של ה"לפני" הכשלים היו בפניות שבהן יש **מילה ממחלקה אחת אבל הבעיה ממחלקה אחרת**. לדוגמה: "The site logged me out in the middle of payment" סווגה `billing` בגלל המילה payment, והבעיה האמיתית היא באתר. בדומה, "The shipping fee in my cart is higher…" סווגה `shipping` בגלל המילה shipping, למרות שמדובר בחיוב. המסקנה: פרומפט בלי הגדרות מתאים מילות מפתח, ולכן הוספתי הגדרות וכללי הכרעה מפורשים.
+**1. ביטחון גבוה לא אומר שהתשובה נכונה.** ב-trace של ה"לפני" הפנייה "Something is wrong with my order" (אין בה נושא ברור, והתווית היא `other`) סווגה `shipping`. קריאה אחת, בלי שום סימן לכך שהמודל לא בטוח, והמערכת העבירה אותה לצוות המשלוחים. מכיוון שאין בקריאה אחת מנגנון לזהות אי-ודאות, הטעות לא נתפסת.
 
-ב-trace של ה"אחרי" רואים שפניות בלי נושא ברור ("Help", "Something is wrong with my order") מקבלות ביטחון נמוך, עוברות את הלולאה ומגיעות לאדם, במקום להיסווג בטעות.
+**2. פרומפט בלי הגדרות מתאים מילות מפתח.** פניות כמו "The site logged me out in the middle of payment" סווגו `billing` בגלל המילה payment, והבעיה האמיתית היא באתר. "The shipping fee in my cart is higher…" סווגה `shipping` בגלל המילה shipping, למרות שמדובר בחיוב. לכן הוספתי הגדרות וכללי הכרעה מפורשים.
+
+ב-trace של ה"אחרי" אותה פנייה ("Something is wrong with my order") מקבלת ביטחון נמוך, עוברת את הלולאה (`classify` פעמיים), מגיעה ל-`human_review` (interrupt) ומקבלת את הקטגוריה הנכונה, `other`.
 
 ![trace לפני](screenshots/trace_before.png)
 ![trace אחרי, עם interrupt](screenshots/trace_after.png)
