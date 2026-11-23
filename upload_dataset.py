@@ -2,10 +2,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from langsmith import Client
-from dataset import DATASET_V2
+from dataset import DATASET_V3
 
 client = Client()
-NAME = "ticket-triage-v2"
+NAME = "ticket-triage-v3"
 
 if client.has_dataset(dataset_name=NAME):
     print("הדאטהסט כבר קיים, מדלגים")
@@ -15,7 +15,7 @@ else:
         dataset_id=ds.id,
         examples=[
             {"inputs": {"ticket": t}, "outputs": {"category": c}}
-            for t, c in DATASET_V2
+            for t, c in DATASET_V3
         ],
     )
-    print(f"הועלו {len(DATASET_V2)} פניות")
+    print(f"הועלו {len(DATASET_V3)} פניות")

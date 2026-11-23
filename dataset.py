@@ -54,3 +54,25 @@ NEW = [
 ]
 
 DATASET_V2 = DATASET + NEW
+
+# פניות עם כמה נושאים, נוספו אחרי שה-DATASET_V2 התברר כקל מדי
+HARD = [
+("The checkout page froze after I clicked pay and now I see two charges on my card","billing"),
+("My package is two weeks late, I want a refund","shipping"),
+("The courier damaged my package, please refund me","shipping"),
+("I was charged but the app never showed an order confirmation","billing"),
+("The order page keeps crashing, so I can't see where my package is","technical"),
+("Tracking says delivered but I got a charge for express shipping I never chose","billing"),
+("I can't apply my coupon because the page throws an error","technical"),
+("Refund still not here and the package never came","billing"),
+("The site logged me out in the middle of payment, did the order go through?","technical"),
+("Please change the delivery address, and also the site is very slow","shipping"),
+("You charged my card but the website says my order doesn't exist","billing"),
+("My parcel is stuck in customs, can I get a new invoice with the customs fee?","billing"),
+("The shipping fee in my cart is higher than what your site says","billing"),
+("Love the new design! By the way, do you ship to Canada?","shipping"),
+("The login code SMS never arrives and I need to track my order","technical"),
+("Is it possible to pay with a gift card?","other"),
+]
+
+DATASET_V3 = DATASET_V2 + HARD

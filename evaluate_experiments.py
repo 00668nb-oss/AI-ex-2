@@ -6,10 +6,10 @@ from langsmith import evaluate
 from langgraph.types import Command
 
 from graph import app, classifier, MIN_PROMPT   # שני את "graph" לשם הקובץ שלך
-from dataset import DATASET_V2
+from dataset import DATASET_V3
 
-DATASET_NAME = "ticket-triage-v2"
-TRUTH = {t: c for t, c in DATASET_V2}
+DATASET_NAME = "ticket-triage-v3"
+TRUTH = {t: c for t, c in DATASET_V3}
 
 
 # ---------- "לפני": קריאה אחת, בלי לולאה ----------

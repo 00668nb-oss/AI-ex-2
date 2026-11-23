@@ -16,7 +16,7 @@ START → classify ──(ביטחון ≥ 0.8)───────────
 | langgraph | [graph.py](graph.py), `StateGraph` |
 | ענף מותנה ולולאה | `route_after_classify`: חוזר ל-`classify` (עד `MAX_ATTEMPTS = 2`), או עובר ל-`handle` או ל-`human_review` |
 | interrupt + human-in-the-loop | `human_review` משתמש ב-`interrupt()`. ההרצה ממשיכה עם `Command(resume=...)` ([run_demo.py](run_demo.py)) |
-| דאטהסט והערכה ב-LangSmith | [dataset.py](dataset.py), [upload_dataset.py](upload_dataset.py), [evaluate_experiments.py](evaluate_experiments.py) (45 פניות, כולל עמומות ובעברית) |
+| דאטהסט והערכה ב-LangSmith | [dataset.py](dataset.py), [upload_dataset.py](upload_dataset.py), [evaluate_experiments.py](evaluate_experiments.py) (61 פניות: ברורות, עמומות, בעברית, וכאלה עם כמה נושאים) |
 
 ## הרצה
 
@@ -30,19 +30,19 @@ START → classify ──(ביטחון ≥ 0.8)───────────
 - **לפני** (`before-naive-prompt`): קריאה אחת למודל (`gpt-4o-mini`) עם פרומפט נאיבי, רק שמות הקטגוריות. בלי לולאה ובלי אדם.
 - **אחרי** (`after-improved-graph`): הגרף המלא עם `PROMPT_V4` (הגדרות לכל קטגוריה וכללי הכרעה לפניות עם כמה נושאים), לולאת סיווג חוזר, ופניות עם ביטחון נמוך עוברות לאדם.
 
-תוצאות (45 פניות, ריצה אחת):
+תוצאות (61 פניות, ריצה אחת; בניסוי "אחרי" ריצה אחת מתוך 61 לא נרשמה ב-LangSmith, ולכן n=60):
 
 | מדד | לפני | אחרי |
 |---|---|---|
-| accuracy (כולל תיקון אדם) | 0.93 | **1.00** |
-| model_accuracy (המודל לבדו) | 0.93 | **1.00** |
-| reached_human | 0% | 9% |
+| accuracy (כולל תיקון אדם) | 0.90 | **0.97** |
+| model_accuracy (המודל לבדו) | 0.90 | **0.95** |
+| reached_human | 0% | 13% |
 
 ![השוואת ניסויים](screenshots/experiments.png)
 
 ## תובנה מה-traces
 
-ב-traces של ה"לפני" הכשלים היו בפניות עם **כמה נושאים** באותה פנייה. לדוגמה: "I paid but the website froze and I don't know if the order went through". המודל קיבל החלטה בביטחון גבוה (0.9) והחזיר `billing`, בלי שום סימן שהוא לא בטוח. המסקנה: ביטחון גבוה של המודל לא מעיד על תשובה נכונה, ולכן הוספתי כללי הכרעה מפורשים לפרומפט.
+ב-traces של ה"לפני" הכשלים היו בפניות שבהן יש **מילה ממחלקה אחת אבל הבעיה ממחלקה אחרת**. לדוגמה: "The site logged me out in the middle of payment" סווגה `billing` בגלל המילה payment, והבעיה האמיתית היא באתר. בדומה, "The shipping fee in my cart is higher…" סווגה `shipping` בגלל המילה shipping, למרות שמדובר בחיוב. המסקנה: פרומפט בלי הגדרות מתאים מילות מפתח, ולכן הוספתי הגדרות וכללי הכרעה מפורשים.
 
 ב-trace של ה"אחרי" רואים שפניות בלי נושא ברור ("Help", "Something is wrong with my order") מקבלות ביטחון נמוך, עוברות את הלולאה ומגיעות לאדם, במקום להיסווג בטעות.
 
@@ -51,6 +51,7 @@ START → classify ──(ביטחון ≥ 0.8)───────────
 
 ## מגבלות
 
-- הדאטהסט קטן והתוצאות רועשות. ריצה חוזרת של ה"לפני" נתנה בין 0.93 ל-1.00.
+- הדאטהסט קטן והתוצאות רועשות. על 45 הפניות הראשונות ה"לפני" כבר היה גבוה (0.93–1.00), ולכן הוספתי 16 פניות עם כמה נושאים (`HARD` ב-[dataset.py](dataset.py)), שבהן ההבדל נראה.
+- שלוש פניות עדיין שגויות גם ב"אחרי", ולכן 0.95 ולא 1.00.
 - ב-`accuracy` האדם מדומה: הוא תמיד מחזיר את התשובה הנכונה. המדד ההוגן יותר הוא `model_accuracy`.
 - כללי ההכרעה ב-`PROMPT_V4` נכתבו אחרי שראיתי את הכשלים בדאטהסט, ולכן יש סיכון ל-overfitting.

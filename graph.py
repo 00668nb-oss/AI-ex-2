@@ -76,7 +76,7 @@ Categories:
 Tie-break rules, when a ticket mentions more than one topic:
 1. The customer's money was actually taken or a refund did not arrive (even to the wrong card): billing, even if the app or a late package is also mentioned.
 2. A refund is requested because a package was lost, late or damaged: shipping.
-3. The customer says they PAID or placed an order, but the site froze, crashed or showed an error and they are unsure whether it went through: technical (billing only if they clearly say money was taken twice or taken without an order).
+3. The customer placed an order or tried to pay, the site froze, crashed or logged them out, and they are only UNSURE whether it went through (no charge is mentioned): technical. If a charge or taken money is mentioned, rule 1 applies instead: billing.
 4. Short tickets with a clear topic ("refund??", "not working", "where is it", "How long does shipping take?") get that topic with normal confidence.
 5. Only a ticket with NO identifiable topic at all ("help", "something is wrong with my order"): other, with LOW confidence (below 0.5).
 Be honest about confidence: lower it whenever the ticket is truly ambiguous."""
